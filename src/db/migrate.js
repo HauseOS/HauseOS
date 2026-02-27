@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import { initDatabase } from './init.js';
-import { seedDatabase } from './seed.js';
 
 dotenv.config();
 
@@ -11,7 +10,7 @@ async function runMigrations() {
     console.log('✅ Migrations complete');
     process.exit(0);
   } catch (error) {
-    console.error('❌ Migration failed:', error);
+    console.error('❌ Migration failed:', error.message);
     process.exit(1);
   }
 }

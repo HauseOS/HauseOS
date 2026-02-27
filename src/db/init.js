@@ -4,6 +4,11 @@ const { Pool } = pkg;
 let pool;
 
 export async function initDatabase() {
+  if (!process.env.DATABASE_URL) {
+    console.warn('⚠️  DATABASE_URL not set. Skipping database initialization.');
+    return;
+  }
+
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
@@ -12,10 +17,10 @@ export async function initDatabase() {
   // Test connection
   try {
     const res = await pool.query('SELECT NOW()');
-    console.log('Database connected:', res.rows[0]);
+    console.log('✅ Database connected:', res.rows[0]);
   } catch (error) {
-    console.error('Database connection failed:', error);
-    throw error;
+    console.error('❌ Database connection failed:', error.message);
+    // Don't throw - allow server to start anyway
   }
 
   // Create tables if they don't exist
@@ -23,6 +28,8 @@ export async function initDatabase() {
 }
 
 async function createTables() {
+  if (!pool) return;
+
   const queries = [
     // Users table
     `CREATE TABLE IF NOT EXISTS users (
