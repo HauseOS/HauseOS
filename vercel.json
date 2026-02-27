@@ -11,10 +11,5 @@
       "src": "/(.*)",
       "dest": "src/server.js"
     }
-  ],
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "JWT_SECRET": "@jwt_secret",
-    "TELEGRAM_BOT_TOKEN": "@telegram_bot_token"
-  }
+  ]
 }
