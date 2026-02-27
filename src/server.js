@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -22,9 +21,15 @@ app.get('/', (req, res) => {
   });
 });
 
-// Simple server start without DB init (will handle DB on demand)
-const server = app.listen(PORT, () => {
-  console.log(`🚀 HauseOS server running on http://localhost:${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🗄️  Database: ${process.env.DATABASE_URL ? '✅ Configured' : '❌ Not configured'}`);
-});
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`🚀 HauseOS server running on http://localhost:${PORT}`);
+    console.log(`📊 Environment: development`);
+    console.log(`🗄️  Database: ${process.env.DATABASE_URL ? '✅ Configured' : '❌ Not configured'}`);
+  });
+}
+
+// Export for Vercel serverless functions
+export default app;
