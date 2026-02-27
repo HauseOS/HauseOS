@@ -7,7 +7,6 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "build": "echo 'Build complete'",
     "migrate": "node src/db/migrate.js",
     "seed": "node src/db/seed.js"
   },
