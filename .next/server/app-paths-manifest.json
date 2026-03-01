@@ -2,6 +2,7 @@
   "/_not-found/page": "app/_not-found/page.js",
   "/editorial/ideas/page": "app/editorial/ideas/page.js",
   "/editorial/page": "app/editorial/page.js",
+  "/editorial/research/page": "app/editorial/research/page.js",
   "/projects/page": "app/projects/page.js",
-  "/editorial/research/page": "app/editorial/research/page.js"
+  "/page": "app/page.js"
 }
