@@ -1,4 +1,6 @@
 import pkg from 'pg';
+import { seedEditorialData } from './editorial-seed.js';
+
 const { Pool } = pkg;
 
 let pool;
@@ -25,6 +27,11 @@ export async function initDatabase() {
 
   // Create tables if they don't exist
   await createTables();
+
+  // Seed editorial data if in development
+  if (process.env.NODE_ENV !== 'production') {
+    await seedEditorialData();
+  }
 }
 
 async function createTables() {

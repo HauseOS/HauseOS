@@ -16,6 +16,23 @@ export function authMiddleware(req, res, next) {
   }
 }
 
+// Alias for authMiddleware (used in editorial routes)
+export function verifyToken(req, res, next) {
+  authMiddleware(req, res, next);
+}
+
+export function checkRole(allowedRoles) {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ error: 'Insufficient permissions' });
+    }
+    next();
+  };
+}
+
 export function adminOnly(req, res, next) {
   if (req.user?.role !== 'admin') {
     return res.status(403).json({ error: 'Admin access required' });
