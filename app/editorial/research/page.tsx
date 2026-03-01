@@ -33,13 +33,13 @@ export default function ResearchBoard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 to-gray-900 text-white">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="border-b border-gray-800 bg-gray-900/50 sticky top-0 z-10">
+      <div className="border-b border-gray-200 sticky top-0 z-10 bg-white">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div>
-            <h1 className="text-3xl font-bold">📊 Research Board</h1>
-            <p className="text-gray-400 mt-1">Research findings and trending topics</p>
+            <h1 className="text-3xl font-bold text-gray-900">Research Board</h1>
+            <p className="text-gray-600 mt-1">Research findings and trending topics</p>
           </div>
         </div>
       </div>
@@ -50,9 +50,7 @@ export default function ResearchBoard() {
           {mockResearchDrops.map((drop) => (
             <div
               key={drop.id}
-              className={`border rounded-lg p-6 cursor-pointer transition-all hover:border-[#ff4e64] ${getUrgencyColor(
-                drop.urgency
-              )}`}
+              className="border border-gray-200 rounded-lg p-6 cursor-pointer transition-all hover:border-[#ff4e64] bg-white"
               onClick={() =>
                 setExpandedId(expandedId === drop.id ? null : drop.id)
               }

@@ -15,12 +15,12 @@ const IdeaCard: React.FC<IdeaCardProps> = ({ idea, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 hover:border-gray-700 hover:shadow-lg transition-all cursor-pointer group"
+      className="bg-white border border-gray-200 rounded-lg p-6 hover:border-[#ff4e64] hover:shadow-md transition-all cursor-pointer group"
     >
       {/* Header: Title + Status */}
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex-1">
-          <h3 className="text-lg font-bold text-white group-hover:text-[#ff4e64] transition-colors line-clamp-2">
+          <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#ff4e64] transition-colors line-clamp-2">
             {idea.title}
           </h3>
         </div>
@@ -28,7 +28,7 @@ const IdeaCard: React.FC<IdeaCardProps> = ({ idea, onClick }) => {
       </div>
 
       {/* Angle */}
-      <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+      <p className="text-gray-600 text-sm mb-4 line-clamp-2">
         {idea.angle}
       </p>
 
@@ -54,7 +54,7 @@ const IdeaCard: React.FC<IdeaCardProps> = ({ idea, onClick }) => {
       )}
 
       {/* Footer: Priority + Actions */}
-      <div className="flex items-center justify-between pt-4 border-t border-gray-800/50">
+      <div className="flex items-center justify-between pt-4 border-t border-gray-200/50">
         <div className="flex items-center gap-2">
           {idea.priority === 'high' && (
             <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-red-100/10 text-red-400">

@@ -46,14 +46,14 @@ export default function IdeaBoard() {
   }, [selectedStatus, selectedTags, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 to-gray-900 text-white">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="border-b border-gray-800 bg-gray-900/50 sticky top-0 z-10">
+      <div className="border-b border-gray-200 sticky top-0 z-10 bg-white">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold">📝 Idea Board</h1>
-              <p className="text-gray-400 mt-1">All video concepts and content ideas</p>
+              <h1 className="text-3xl font-bold text-gray-900">Idea Board</h1>
+              <p className="text-gray-600 mt-1">All video concepts and content ideas</p>
             </div>
             <button className="px-4 py-2 bg-[#ff4e64] text-white rounded-lg hover:bg-[#ff3a52] transition-colors font-medium">
               + New Idea

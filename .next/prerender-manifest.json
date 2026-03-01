@@ -1,6 +1,31 @@
 {
   "version": 4,
   "routes": {
+    "/_not-found": {
+      "initialStatus": 404,
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/_not-found",
+      "dataRoute": "/_not-found.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/projects": {
       "experimentalBypassFor": [
         {
@@ -16,30 +41,6 @@
       "initialRevalidateSeconds": false,
       "srcRoute": "/projects",
       "dataRoute": "/projects.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/editorial/ideas": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/editorial/ideas",
-      "dataRoute": "/editorial/ideas.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -73,8 +74,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/_not-found": {
-      "initialStatus": 404,
+    "/editorial/ideas": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -87,8 +87,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/_not-found",
-      "dataRoute": "/_not-found.rsc",
+      "srcRoute": "/editorial/ideas",
+      "dataRoute": "/editorial/ideas.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -150,8 +150,8 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "6c0085e6eaac8dfd56a7a117b703b94f",
-    "previewModeSigningKey": "dd890b89c870e4a0bc1b0e09249d41a1a68f581732ae8f46a1d1893ca4e36dcc",
-    "previewModeEncryptionKey": "41729be08fcc7bf7738e74477ae020757643c33bf72df9627ec34e4fdcb752fc"
+    "previewModeId": "e43c4cdf93cb83d5ab341d2f583e086d",
+    "previewModeSigningKey": "044fb4f336a621cfcf6fb6ff122f05fd94d6bdbfcc5502df4dddb1e9011fed6a",
+    "previewModeEncryptionKey": "c67821bc67f01c50e131ed812b697dbfc4c584a0d1d1a03ed54b962dc9c5c204"
   }
 }
