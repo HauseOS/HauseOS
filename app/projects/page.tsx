@@ -50,7 +50,7 @@ export default function ProjectsPage() {
             <p className="text-gray-400 text-sm mt-1">Coming soon</p>
           </div>
           <div className="space-y-3">
-            {[...backlogProjects, ...BACKLOG_PROJECTS].map((project, idx) => (
+            {[...backlogProjects, ...BACKLOG_PROJECTS].map((project: any, idx: number) => (
               <div
                 key={idx}
                 className="border border-gray-700/50 bg-gray-800/20 rounded-lg p-4 hover:border-gray-600 transition-colors"
@@ -59,7 +59,7 @@ export default function ProjectsPage() {
                   <span className="text-2xl">{project.emoji}</span>
                   <div>
                     <h3 className="font-bold text-white">{project.name}</h3>
-                    <p className="text-gray-400 text-sm">{project.description}</p>
+                    <p className="text-gray-400 text-sm">{project.description || project.tagline || ''}</p>
                   </div>
                 </div>
               </div>

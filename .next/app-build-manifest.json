@@ -1,0 +1,47 @@
+{
+  "pages": {
+    "/_not-found/page": [
+      "static/chunks/webpack-4a462cecab786e93.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/255-ebd51be49873d76c.js",
+      "static/chunks/main-app-532cfa71cf14f58c.js",
+      "static/chunks/app/_not-found/page-cb9b2b622d94e9a7.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack-4a462cecab786e93.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/255-ebd51be49873d76c.js",
+      "static/chunks/main-app-532cfa71cf14f58c.js",
+      "static/css/a76409e3ed6588b4.css",
+      "static/chunks/app/layout-f3703024748de008.js"
+    ],
+    "/editorial/ideas/page": [
+      "static/chunks/webpack-4a462cecab786e93.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/255-ebd51be49873d76c.js",
+      "static/chunks/main-app-532cfa71cf14f58c.js",
+      "static/chunks/app/editorial/ideas/page-cbdc7c7eafa6c3ed.js"
+    ],
+    "/editorial/page": [
+      "static/chunks/webpack-4a462cecab786e93.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/255-ebd51be49873d76c.js",
+      "static/chunks/main-app-532cfa71cf14f58c.js",
+      "static/chunks/app/editorial/page-215b02299a469fe0.js"
+    ],
+    "/projects/page": [
+      "static/chunks/webpack-4a462cecab786e93.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/255-ebd51be49873d76c.js",
+      "static/chunks/main-app-532cfa71cf14f58c.js",
+      "static/chunks/app/projects/page-9aeb744c0f924b7d.js"
+    ],
+    "/editorial/research/page": [
+      "static/chunks/webpack-4a462cecab786e93.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/255-ebd51be49873d76c.js",
+      "static/chunks/main-app-532cfa71cf14f58c.js",
+      "static/chunks/app/editorial/research/page-fdef146ab8890cf6.js"
+    ]
+  }
+}
