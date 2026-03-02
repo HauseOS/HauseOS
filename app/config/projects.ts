@@ -17,6 +17,28 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
+    id: 'resource',
+    name: 'Hause Resource',
+    emoji: '🧰',
+    tagline: 'Curated AI tools & affiliate recommendations',
+    status: 'live',
+    url: 'https://hause-resource.vercel.app/',
+    category: 'design',
+    owner: 'Yeeling',
+    lastUpdated: '2026-03-02T13:46:00Z',
+    actions: [
+      {
+        label: 'View Live',
+        url: 'https://hause-resource.vercel.app/',
+        isPrimary: true,
+      },
+      {
+        label: 'Edit',
+        url: 'https://github.com/HauseOS/hause-resource',
+      },
+    ],
+  },
+  {
     id: 'partnerships',
     name: 'Hause Partnerships',
     emoji: '🤝',
