@@ -1,8 +1,9 @@
 {
   "/_not-found/page": "/_not-found",
   "/editorial/ideas/page": "/editorial/ideas",
-  "/projects/page": "/projects",
-  "/editorial/research/page": "/editorial/research",
   "/editorial/page": "/editorial",
-  "/page": "/"
+  "/content-pipeline/page": "/content-pipeline",
+  "/page": "/",
+  "/projects/page": "/projects",
+  "/editorial/research/page": "/editorial/research"
 }

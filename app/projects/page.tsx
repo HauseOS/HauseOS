@@ -12,13 +12,24 @@ export default function ProjectsPage() {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="border-b border-gray-200 sticky top-0 z-10 bg-white">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between gap-6 mb-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">HauseOS</h1>
               <p className="text-gray-600 mt-1">Operational hub for Hause Collective</p>
             </div>
           </div>
+          <nav className="flex gap-6 border-t border-gray-200 pt-4">
+            <a href="/projects" className="text-sm font-medium text-[#ff4e64] pb-2 border-b-2 border-[#ff4e64]">
+              Projects
+            </a>
+            <a href="/content-pipeline" className="text-sm font-medium text-gray-600 hover:text-gray-900 pb-2 transition-colors">
+              Content Pipeline
+            </a>
+            <a href="/editorial" className="text-sm font-medium text-gray-600 hover:text-gray-900 pb-2 transition-colors">
+              Editorial
+            </a>
+          </nav>
         </div>
       </div>
 

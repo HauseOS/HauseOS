@@ -33,6 +33,12 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/content-pipeline",
+      "regex": "^/content\\-pipeline(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/content\\-pipeline(?:/)?$"
+    },
+    {
       "page": "/editorial",
       "regex": "^/editorial(?:/)?$",
       "routeKeys": {},
