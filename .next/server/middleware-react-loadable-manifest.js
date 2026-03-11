@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}";
+self.__REACT_LOADABLE_MANIFEST='{"app/content-pipeline/page.tsx -> @/app/mock-content-pipeline":{"id":6902,"files":["static/chunks/902.69bf827b097e92ee.js"]},"app/editorial/ideas/page.tsx -> @/app/mock-data":{"id":6008,"files":["static/chunks/8.725212ff3e2b9c37.js"]}}';

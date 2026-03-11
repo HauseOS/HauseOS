@@ -1,5 +1,6 @@
 import pkg from 'pg';
 import { seedEditorialData } from './editorial-seed.js';
+import { initSponsorSchema } from './sponsor-schema.js';
 
 const { Pool } = pkg;
 

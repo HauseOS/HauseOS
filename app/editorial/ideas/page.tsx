@@ -1,18 +1,45 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { mockIdeas } from '@/app/mock-data';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { VideoIdea } from '@/app/mock-data';
 import IdeaCard from '../components/IdeaCard';
 import FilterBar from '../components/FilterBar';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
+
 export default function IdeaBoard() {
+  const [ideas, setIdeas] = useState<VideoIdea[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const fetchIdeas = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_BASE}/api/editorial/ideas`);
+      if (!res.ok) throw new Error('Failed to fetch ideas');
+      const data = await res.json();
+      setIdeas(data.ideas || []);
+      setTotalCount(data.total || data.ideas?.length || 0);
+      setError(null);
+    } catch (err) {
+      setError((err as Error).message);
+      // Fallback to mock data
+      const { mockIdeas } = await import('@/app/mock-data');
+      setIdeas(mockIdeas);
+      setTotalCount(mockIdeas.length);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchIdeas(); }, [fetchIdeas]);
+
   const filteredIdeas = useMemo(() => {
-    return mockIdeas.filter((idea) => {
-      // Status filter
+    return ideas.filter((idea) => {
       if (selectedStatus !== 'All') {
         const statusMap: { [key: string]: string } = {
           'Brainstorm': 'brainstorm',
@@ -25,12 +52,10 @@ export default function IdeaBoard() {
         if (idea.status !== statusMap[selectedStatus]) return false;
       }
 
-      // Tag filter
       if (selectedTags.length > 0) {
-        if (!selectedTags.some((tag) => idea.tags.includes(tag))) return false;
+        if (!selectedTags.some((tag) => idea.tags?.includes(tag))) return false;
       }
 
-      // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         if (
@@ -43,7 +68,18 @@ export default function IdeaBoard() {
 
       return true;
     });
-  }, [selectedStatus, selectedTags, searchQuery]);
+  }, [ideas, selectedStatus, selectedTags, searchQuery]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ff4e64] mx-auto mb-4"></div>
+          <p className="text-gray-500">Loading ideas...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -54,6 +90,9 @@ export default function IdeaBoard() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Idea Board</h1>
               <p className="text-gray-600 mt-1">All video concepts and content ideas</p>
+              {error && (
+                <p className="text-xs text-amber-600 mt-1">Using cached data — API unavailable</p>
+              )}
             </div>
             <button className="px-4 py-2 bg-[#ff4e64] text-white rounded-lg hover:bg-[#ff3a52] transition-colors font-medium">
               + New Idea
@@ -83,7 +122,6 @@ export default function IdeaBoard() {
                 key={idea.id}
                 idea={idea}
                 onClick={() => {
-                  // Would navigate to detail page
                   console.log('Navigate to idea:', idea.id);
                 }}
               />
@@ -98,7 +136,7 @@ export default function IdeaBoard() {
 
         {/* Results Count */}
         <div className="mt-8 text-center text-sm text-gray-500">
-          Showing {filteredIdeas.length} of {mockIdeas.length} ideas
+          Showing {filteredIdeas.length} of {totalCount} ideas
         </div>
       </div>
     </div>

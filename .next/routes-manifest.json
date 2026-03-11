@@ -57,6 +57,18 @@
       "namedRegex": "^/editorial/research(?:/)?$"
     },
     {
+      "page": "/partnerships",
+      "regex": "^/partnerships(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/partnerships(?:/)?$"
+    },
+    {
+      "page": "/partnerships/companies",
+      "regex": "^/partnerships/companies(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/partnerships/companies(?:/)?$"
+    },
+    {
       "page": "/projects",
       "regex": "^/projects(?:/)?$",
       "routeKeys": {},
