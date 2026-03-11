@@ -1,15 +1,15 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
+  "/content/page": "app/content/page.js",
+  "/editorial/page": "app/editorial/page.js",
+  "/content/research/page": "app/content/research/page.js",
   "/content-pipeline/page": "app/content-pipeline/page.js",
   "/content/ideas/page": "app/content/ideas/page.js",
-  "/content/page": "app/content/page.js",
-  "/content/research/page": "app/content/research/page.js",
-  "/content/pipeline/page": "app/content/pipeline/page.js",
   "/editorial/ideas/page": "app/editorial/ideas/page.js",
-  "/editorial/page": "app/editorial/page.js",
+  "/content/pipeline/page": "app/content/pipeline/page.js",
   "/editorial/research/page": "app/editorial/research/page.js",
-  "/page": "app/page.js",
+  "/projects/page": "app/projects/page.js",
   "/partnerships/companies/page": "app/partnerships/companies/page.js",
-  "/partnerships/page": "app/partnerships/page.js",
-  "/projects/page": "app/projects/page.js"
+  "/page": "app/page.js",
+  "/partnerships/page": "app/partnerships/page.js"
 }

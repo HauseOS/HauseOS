@@ -1,22 +1,76 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { mockIdeas, mockDashboardStats } from '@/app/mock-data';
-import { mockContentPipeline } from '@/app/mock-content-pipeline';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
+
+interface Idea {
+  id: string;
+  title: string;
+  angle: string;
+  status: string;
+  submitted_by_name: string;
+}
+
+interface Deal {
+  id: string;
+  status: string;
+  deal_value: number | null;
+  notes: string;
+  company_name?: string;
+}
 
 export default function Dashboard() {
-  const ideasInPipeline = mockContentPipeline.filter(i => i.status !== 'published').length;
-  const publishedCount = mockContentPipeline.filter(i => i.status === 'published').length;
-  const totalRevenue = mockContentPipeline.reduce((sum, i) => sum + (i.revenue || 0), 0);
-  const recentIdeas = mockIdeas.slice(0, 3);
+  const [ideas, setIdeas] = useState<Idea[]>([]);
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [ideasRes, dealsRes] = await Promise.allSettled([
+          fetch(`${API_BASE}/api/editorial/ideas`),
+          fetch(`${API_BASE}/api/deals`),
+        ]);
+
+        if (ideasRes.status === 'fulfilled' && ideasRes.value.ok) {
+          const data = await ideasRes.value.json();
+          setIdeas(data.ideas || []);
+        }
+        if (dealsRes.status === 'fulfilled' && dealsRes.value.ok) {
+          const data = await dealsRes.value.json();
+          setDeals(data.deals || []);
+        }
+      } catch (e) {
+        console.error('Dashboard fetch error:', e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const totalIdeas = ideas.length;
+  const greenlitOrProd = ideas.filter(i => ['greenlit', 'in_production'].includes(i.status)).length;
+  const activeDeals = deals.filter(d => !['paid', 'lost'].includes(d.status)).length;
+  const totalPipelineValue = deals.reduce((sum, d) => sum + (d.deal_value || 0), 0);
+  const recentIdeas = ideas.slice(0, 3);
 
   const stats = [
-    { label: 'IDEAS IN PIPELINE', value: ideasInPipeline, color: '#3B82F6' },
-    { label: 'PUBLISHED', value: publishedCount, color: '#10B981' },
-    { label: 'TOTAL REVENUE', value: `$${totalRevenue.toLocaleString()}`, color: '#E63030' },
-    { label: 'IDEAS SUBMITTED', value: mockDashboardStats.ideas_submitted, color: '#8B5CF6' },
+    { label: 'TOTAL IDEAS', value: totalIdeas, color: '#3B82F6' },
+    { label: 'GREENLIT / IN PRODUCTION', value: greenlitOrProd, color: '#10B981' },
+    { label: 'ACTIVE DEALS', value: activeDeals, color: '#E63030' },
+    { label: 'PIPELINE VALUE', value: `$${totalPipelineValue.toLocaleString()}`, color: '#8B5CF6' },
   ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
@@ -59,11 +113,11 @@ export default function Dashboard() {
                 className="text-sm font-medium transition-colors"
                 style={{ color: 'var(--accent-primary)' }}
               >
-                View all
+                View all →
               </Link>
             </div>
             <div className="space-y-3">
-              {recentIdeas.map((idea) => (
+              {recentIdeas.length > 0 ? recentIdeas.map((idea) => (
                 <div
                   key={idea.id}
                   className="p-4 rounded-lg transition-colors"
@@ -90,7 +144,9 @@ export default function Dashboard() {
                     </span>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>No ideas yet</p>
+              )}
             </div>
           </div>
 
@@ -132,33 +188,38 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Agent Contributions */}
-        <div className="surface-card p-6 mt-6">
-          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-            Agent Contributions
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {mockDashboardStats.agent_contributions.map((contrib) => (
-              <div key={contrib.agent_origin} className="p-4 rounded-lg" style={{ background: 'var(--bg-elevated)' }}>
-                <p className="text-xs mb-1" style={{ color: 'var(--text-secondary)' }}>Submitted by</p>
-                <p className="font-bold capitalize mb-2" style={{ color: 'var(--text-primary)' }}>
-                  {contrib.agent_origin}
-                </p>
-                <div className="w-full rounded-full h-2" style={{ background: 'var(--bg-overlay)' }}>
-                  <div
-                    className="h-2 rounded-full bg-accent"
-                    style={{
-                      width: `${(contrib.count / mockDashboardStats.agent_contributions.reduce((s, c) => s + c.count, 0)) * 100}%`,
-                    }}
-                  />
+        {/* Active Deals */}
+        {deals.length > 0 && (
+          <div className="surface-card p-6 mt-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
+                Active Deals
+              </h2>
+              <Link href="/partnerships" className="text-sm font-medium" style={{ color: 'var(--accent-primary)' }}>
+                View pipeline →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {deals.filter(d => !['paid', 'lost'].includes(d.status)).slice(0, 6).map((deal) => (
+                <div key={deal.id} className="p-4 rounded-lg" style={{ background: 'var(--bg-elevated)' }}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs px-2 py-0.5 rounded-full capitalize" style={{ background: 'var(--accent-glow)', color: 'var(--accent-primary)' }}>
+                      {deal.status}
+                    </span>
+                    {deal.deal_value && (
+                      <span className="font-bold text-sm" style={{ color: '#10B981' }}>
+                        ${deal.deal_value.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
+                    {deal.notes || 'No notes'}
+                  </p>
                 </div>
-                <p className="text-right text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
-                  {contrib.count} ideas
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
