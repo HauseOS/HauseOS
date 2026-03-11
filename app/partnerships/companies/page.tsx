@@ -58,9 +58,10 @@ export default function CompaniesPage() {
     return true;
   });
 
-  const FitStars = ({ score }: { score: number }) => (
-    <span className="text-amber-500 text-sm">{'★'.repeat(score)}{'☆'.repeat(5 - score)}</span>
-  );
+  const FitStars = ({ score }: { score: number }) => {
+    const color = score >= 85 ? '#22c55e' : score >= 70 ? '#f59e0b' : '#94a3b8';
+    return <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)', color }}>{score}%</span>;
+  };
 
   const getSourceColor = (source: string | null) => {
     switch (source) {

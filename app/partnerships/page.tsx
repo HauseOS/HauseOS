@@ -95,9 +95,10 @@ export default function PartnershipsPage() {
     }
   };
 
-  const FitStars = ({ score }: { score: number | null }) => {
+  const FitScore = ({ score }: { score: number | null }) => {
     if (!score) return null;
-    return <span className="text-xs text-amber-500">{'★'.repeat(score)}{'☆'.repeat(5 - score)}</span>;
+    const color = score >= 85 ? '#22c55e' : score >= 70 ? '#f59e0b' : '#94a3b8';
+    return <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)', color }}>{score}%</span>;
   };
 
   const DealCard = ({ deal }: { deal: Deal }) => {
@@ -106,7 +107,7 @@ export default function PartnershipsPage() {
       <div className="surface-card-hover p-4 cursor-pointer">
         <div className="flex items-start justify-between gap-2 mb-1">
           <h4 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{deal.company_name}</h4>
-          <FitStars score={deal.company_fit_score} />
+          <FitScore score={deal.company_fit_score} />
         </div>
         {deal.contact_name && <p className="text-xs mb-2" style={{ color: 'var(--text-tertiary)' }}>{deal.contact_name}</p>}
         <div className="flex gap-1.5 flex-wrap mb-2">
