@@ -9,64 +9,27 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
     [key: string]: {
       icon: string;
       label: string;
-      bgColor: string;
-      textColor: string;
+      bg: string;
+      text: string;
     };
   } = {
-    brainstorm: {
-      icon: '💡',
-      label: 'Brainstorm',
-      bgColor: 'bg-yellow-100/20',
-      textColor: 'text-yellow-300',
-    },
-    under_review: {
-      icon: '👀',
-      label: 'Under Review',
-      bgColor: 'bg-blue-100/20',
-      textColor: 'text-blue-300',
-    },
-    feedback_pending: {
-      icon: '💬',
-      label: 'Feedback Pending',
-      bgColor: 'bg-orange-100/20',
-      textColor: 'text-orange-300',
-    },
-    greenlit: {
-      icon: '✅',
-      label: 'Greenlit',
-      bgColor: 'bg-green-100/20',
-      textColor: 'text-green-300',
-    },
-    in_production: {
-      icon: '🎬',
-      label: 'In Production',
-      bgColor: 'bg-purple-100/20',
-      textColor: 'text-purple-300',
-    },
-    published: {
-      icon: '📺',
-      label: 'Published',
-      bgColor: 'bg-green-100/20',
-      textColor: 'text-green-200',
-    },
-    rejected: {
-      icon: '❌',
-      label: 'Rejected',
-      bgColor: 'bg-red-100/20',
-      textColor: 'text-red-300',
-    },
-    archived: {
-      icon: '📦',
-      label: 'Archived',
-      bgColor: 'bg-gray-100/20',
-      textColor: 'text-gray-400',
-    },
+    brainstorm: { icon: '💡', label: 'Brainstorm', bg: 'rgba(234,179,8,0.15)', text: '#EAB308' },
+    under_review: { icon: '👀', label: 'Under Review', bg: 'rgba(59,130,246,0.15)', text: '#3B82F6' },
+    feedback_pending: { icon: '💬', label: 'Feedback Pending', bg: 'rgba(249,115,22,0.15)', text: '#F97316' },
+    greenlit: { icon: '✅', label: 'Greenlit', bg: 'rgba(16,185,129,0.15)', text: '#10B981' },
+    in_production: { icon: '🎬', label: 'In Production', bg: 'rgba(139,92,246,0.15)', text: '#8B5CF6' },
+    published: { icon: '📺', label: 'Published', bg: 'rgba(52,211,153,0.15)', text: '#34D399' },
+    rejected: { icon: '❌', label: 'Rejected', bg: 'rgba(239,68,68,0.15)', text: '#EF4444' },
+    archived: { icon: '📦', label: 'Archived', bg: 'var(--bg-elevated)', text: 'var(--text-tertiary)' },
   };
 
   const config = statusConfig[status] || statusConfig.brainstorm;
 
   return (
-    <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${config.bgColor} ${config.textColor}`}>
+    <div
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
+      style={{ background: config.bg, color: config.text }}
+    >
       <span>{config.icon}</span>
       <span>{config.label}</span>
     </div>

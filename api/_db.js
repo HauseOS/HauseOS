@@ -1,17 +1,24 @@
-import pkg from 'pg';
-const { Pool } = pkg;
+import { createClient } from '@supabase/supabase-js';
 
-let pool;
+let client;
 
-export function getPool() {
-  if (!process.env.DATABASE_URL) return null;
-  if (!pool) {
-    pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false },
-    });
+export function getSupabase() {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) return null;
+  if (!client) {
+    client = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_KEY,
+      { auth: { persistSession: false } }
+    );
   }
-  return pool;
+  return client;
+}
+
+// Legacy alias — handlers that call getPool() will get null,
+// triggering their "Database not available" fallback until they're migrated.
+// Handlers migrated to getSupabase() won't call this.
+export function getPool() {
+  return null;
 }
 
 export function checkApiKey(req, res) {

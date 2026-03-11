@@ -8,20 +8,38 @@ export interface BadgeProps
 function Badge({
   className,
   variant = "default",
+  style,
   ...props
 }: BadgeProps) {
   const variants = {
-    default: "border-transparent bg-[#ff4e64] text-white hover:bg-[#ff3a52]",
-    secondary: "border-transparent bg-gray-100 text-gray-900 hover:bg-gray-200",
-    destructive: "border-transparent bg-red-500 text-white hover:bg-red-600",
-    outline: "text-gray-900 border border-gray-200 hover:bg-gray-50"
+    default: {
+      background: 'var(--accent-primary)',
+      color: '#fff',
+      border: '1px solid transparent',
+    },
+    secondary: {
+      background: 'var(--bg-elevated)',
+      color: 'var(--text-primary)',
+      border: '1px solid transparent',
+    },
+    destructive: {
+      background: '#EF4444',
+      color: '#fff',
+      border: '1px solid transparent',
+    },
+    outline: {
+      background: 'transparent',
+      color: 'var(--text-secondary)',
+      border: '1px solid var(--border-default)',
+    },
   }
+
+  const v = variants[variant]
 
   return (
     <div
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 ${
-        variants[variant]
-      } ${className}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none ${className}`}
+      style={{ ...v, ...style }}
       {...props}
     />
   )

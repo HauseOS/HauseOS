@@ -1,11 +1,15 @@
 {
   "/_not-found/page": "/_not-found",
   "/content-pipeline/page": "/content-pipeline",
-  "/page": "/",
-  "/editorial/page": "/editorial",
+  "/content/ideas/page": "/content/ideas",
+  "/content/page": "/content",
+  "/content/research/page": "/content/research",
+  "/content/pipeline/page": "/content/pipeline",
   "/editorial/ideas/page": "/editorial/ideas",
+  "/editorial/page": "/editorial",
   "/editorial/research/page": "/editorial/research",
+  "/page": "/",
   "/partnerships/companies/page": "/partnerships/companies",
-  "/projects/page": "/projects",
-  "/partnerships/page": "/partnerships"
+  "/partnerships/page": "/partnerships",
+  "/projects/page": "/projects"
 }

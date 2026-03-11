@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 
 interface Deal {
   id: string;
@@ -30,17 +28,16 @@ interface PipelineSummary {
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
-
 const STATUSES = ['discovered', 'researched', 'pitched', 'negotiating', 'confirmed', 'delivered', 'paid'];
 
-const STATUS_CONFIG: Record<string, { label: string; emoji: string; color: string }> = {
-  discovered: { label: 'Discovered', emoji: '🔍', color: 'border-gray-200 bg-gray-50' },
-  researched: { label: 'Researched', emoji: '📋', color: 'border-blue-200 bg-blue-50' },
-  pitched: { label: 'Pitched', emoji: '📨', color: 'border-indigo-200 bg-indigo-50' },
-  negotiating: { label: 'Negotiating', emoji: '🤝', color: 'border-yellow-200 bg-yellow-50' },
-  confirmed: { label: 'Confirmed', emoji: '✅', color: 'border-green-200 bg-green-50' },
-  delivered: { label: 'Delivered', emoji: '📦', color: 'border-purple-200 bg-purple-50' },
-  paid: { label: 'Paid', emoji: '💰', color: 'border-emerald-200 bg-emerald-50' },
+const STATUS_CONFIG: Record<string, { label: string; emoji: string }> = {
+  discovered: { label: 'Discovered', emoji: '🔍' },
+  researched: { label: 'Researched', emoji: '📋' },
+  pitched: { label: 'Pitched', emoji: '📨' },
+  negotiating: { label: 'Negotiating', emoji: '🤝' },
+  confirmed: { label: 'Confirmed', emoji: '✅' },
+  delivered: { label: 'Delivered', emoji: '📦' },
+  paid: { label: 'Paid', emoji: '💰' },
 };
 
 export default function PartnershipsPage() {
@@ -58,12 +55,9 @@ export default function PartnershipsPage() {
         fetch(`${API_BASE}/api/deals`),
         fetch(`${API_BASE}/api/deals/pipeline`),
       ]);
-
       if (!dealsRes.ok || !pipelineRes.ok) throw new Error('Failed to fetch deals');
-
       const dealsData = await dealsRes.json();
       const pipelineData = await pipelineRes.json();
-
       setDeals(dealsData.deals || []);
       setPipeline(pipelineData);
       setError(null);
@@ -93,73 +87,56 @@ export default function PartnershipsPage() {
 
   const getDealTypeColor = (type: string | null) => {
     switch (type) {
-      case 'integrated': return 'bg-blue-100 text-blue-800';
-      case 'dedicated': return 'bg-purple-100 text-purple-800';
-      case 'shorts': return 'bg-pink-100 text-pink-800';
-      case 'series': return 'bg-amber-100 text-amber-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'integrated': return { bg: 'rgba(59,130,246,0.15)', text: '#3B82F6' };
+      case 'dedicated': return { bg: 'rgba(139,92,246,0.15)', text: '#8B5CF6' };
+      case 'shorts': return { bg: 'rgba(236,72,153,0.15)', text: '#EC4899' };
+      case 'series': return { bg: 'rgba(245,158,11,0.15)', text: '#F59E0B' };
+      default: return { bg: 'var(--bg-elevated)', text: 'var(--text-secondary)' };
     }
   };
 
   const FitStars = ({ score }: { score: number | null }) => {
     if (!score) return null;
-    return (
-      <span className="text-xs text-amber-500">
-        {'★'.repeat(score)}{'☆'.repeat(5 - score)}
-      </span>
-    );
+    return <span className="text-xs text-amber-500">{'★'.repeat(score)}{'☆'.repeat(5 - score)}</span>;
   };
 
-  const DealCard = ({ deal }: { deal: Deal }) => (
-    <Card className={`${STATUS_CONFIG[deal.status]?.color || 'border-gray-200 bg-white'} border cursor-pointer transition-all hover:shadow-md hover:border-[#ff4e64]`}>
-      <CardHeader className="pb-2 pt-4 px-4">
-        <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-sm font-semibold leading-tight">{deal.company_name}</CardTitle>
+  const DealCard = ({ deal }: { deal: Deal }) => {
+    const dtColor = getDealTypeColor(deal.deal_type);
+    return (
+      <div className="surface-card-hover p-4 cursor-pointer">
+        <div className="flex items-start justify-between gap-2 mb-1">
+          <h4 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{deal.company_name}</h4>
           <FitStars score={deal.company_fit_score} />
         </div>
-        {deal.contact_name && (
-          <p className="text-xs text-gray-500 mt-1">{deal.contact_name}</p>
-        )}
-      </CardHeader>
-      <CardContent className="pb-3 px-4">
-        <div className="space-y-2">
-          <div className="flex gap-1.5 flex-wrap">
-            {deal.deal_type && (
-              <Badge className={`text-[10px] px-1.5 py-0 ${getDealTypeColor(deal.deal_type)}`}>
-                {deal.deal_type}
-              </Badge>
-            )}
-            {deal.deal_value && (
-              <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-semibold">
-                ${Number(deal.deal_value).toLocaleString()}
-              </Badge>
-            )}
-          </div>
-          {deal.idea_title && (
-            <p className="text-xs text-gray-600 line-clamp-1">📹 {deal.idea_title}</p>
+        {deal.contact_name && <p className="text-xs mb-2" style={{ color: 'var(--text-tertiary)' }}>{deal.contact_name}</p>}
+        <div className="flex gap-1.5 flex-wrap mb-2">
+          {deal.deal_type && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: dtColor.bg, color: dtColor.text }}>{deal.deal_type}</span>
           )}
-          {deal.company_category && (
-            <p className="text-[10px] text-gray-400">{deal.company_category}</p>
+          {deal.deal_value && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold" style={{ background: 'var(--bg-elevated)', color: 'var(--text-secondary)' }}>
+              ${Number(deal.deal_value).toLocaleString()}
+            </span>
           )}
         </div>
-      </CardContent>
-    </Card>
-  );
+        {deal.idea_title && <p className="text-xs line-clamp-1" style={{ color: 'var(--text-tertiary)' }}>📹 {deal.idea_title}</p>}
+        {deal.company_category && <p className="text-[10px] mt-1" style={{ color: 'var(--text-disabled)' }}>{deal.company_category}</p>}
+      </div>
+    );
+  };
 
   const KanbanColumn = ({ status, deals }: { status: string; deals: Deal[] }) => {
     const config = STATUS_CONFIG[status];
     return (
       <div className="min-w-[200px] flex-1">
-        <div className="bg-white rounded-lg border border-gray-200 h-full flex flex-col">
-          <div className="bg-gray-50 border-b border-gray-200 px-3 py-2.5">
-            <h3 className="font-semibold text-gray-900 text-sm">
-              {config.emoji} {config.label}
-            </h3>
-            <p className="text-xs text-gray-500">{deals.length} deal{deals.length !== 1 ? 's' : ''}</p>
+        <div className="surface-card h-full flex flex-col">
+          <div className="px-3 py-2.5 border-b" style={{ background: 'var(--bg-elevated)', borderColor: 'var(--border-default)' }}>
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{config.emoji} {config.label}</h3>
+            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{deals.length} deal{deals.length !== 1 ? 's' : ''}</p>
           </div>
           <div className="flex-1 overflow-y-auto p-3 space-y-2.5 max-h-[600px]">
             {deals.length === 0 ? (
-              <p className="text-center text-gray-400 text-xs py-6">No deals</p>
+              <p className="text-center text-xs py-6" style={{ color: 'var(--text-disabled)' }}>No deals</p>
             ) : (
               deals.map((deal) => <DealCard key={deal.id} deal={deal} />)
             )}
@@ -169,122 +146,89 @@ export default function PartnershipsPage() {
     );
   };
 
+  const FilterBadge = ({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) => (
+    <button
+      onClick={onClick}
+      className="text-xs px-2.5 py-1 rounded-full font-medium transition-colors"
+      style={{
+        background: active ? 'var(--accent-primary)' : 'transparent',
+        color: active ? '#fff' : 'var(--text-secondary)',
+        border: `1px solid ${active ? 'var(--accent-primary)' : 'var(--border-default)'}`,
+      }}
+    >
+      {children}
+    </button>
+  );
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ff4e64] mx-auto mb-4"></div>
-          <p className="text-gray-500">Loading partnerships...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto mb-4"></div>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading partnerships...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white sticky top-0 z-10">
+      <div className="border-b sticky top-14 z-10" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-default)' }}>
         <div className="max-w-[1400px] mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">🤝 Partnerships Pipeline</h1>
-              <p className="text-gray-600 mt-1">Sponsor deals from discovery to payment</p>
-              {error && (
-                <p className="text-xs text-amber-600 mt-1">API unavailable — no data to display</p>
-              )}
+              <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Partnerships Pipeline</h1>
+              <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>Sponsor deals from discovery to payment</p>
+              {error && <p className="text-xs text-amber-500 mt-1">API unavailable — no data to display</p>}
             </div>
             <div className="flex gap-3">
-              <a
-                href="/partnerships/companies"
-                className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm"
-              >
-                Company Directory
-              </a>
-              <button className="px-4 py-2 bg-[#ff4e64] text-white rounded-lg hover:bg-[#ff3a52] transition-colors font-medium text-sm">
-                + New Deal
-              </button>
+              <a href="/partnerships/companies" className="btn-secondary text-sm">Company Directory</a>
+              <button className="btn-primary text-sm">+ New Deal</button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Stats Bar */}
+      {/* Stats */}
       <div className="max-w-[1400px] mx-auto px-6 py-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-3xl font-bold text-blue-600">
-                ${(pipeline?.total_pipeline_value || 0).toLocaleString()}
-              </div>
-              <p className="text-sm text-gray-600">Total Pipeline Value</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-3xl font-bold text-green-600">
-                {pipeline?.total_active_deals || 0}
-              </div>
-              <p className="text-sm text-gray-600">Active Deals</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-3xl font-bold text-purple-600">
-                {pipeline?.deals_this_month || 0}
-              </div>
-              <p className="text-sm text-gray-600">Deals This Month</p>
-            </CardContent>
-          </Card>
+          {[
+            { label: 'TOTAL PIPELINE VALUE', value: `$${(pipeline?.total_pipeline_value || 0).toLocaleString()}`, color: '#3B82F6' },
+            { label: 'ACTIVE DEALS', value: pipeline?.total_active_deals || 0, color: '#10B981' },
+            { label: 'DEALS THIS MONTH', value: pipeline?.deals_this_month || 0, color: '#8B5CF6' },
+          ].map((s) => (
+            <div key={s.label} className="surface-card p-5">
+              <p className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</p>
+              <p className="label-uppercase mt-1">{s.label}</p>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Filters */}
       <div className="max-w-[1400px] mx-auto px-6 pb-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <p className="text-sm font-semibold text-gray-700 mb-3">Filter by:</p>
+        <div className="surface-card p-4">
+          <p className="text-sm font-semibold mb-3" style={{ color: 'var(--text-secondary)' }}>Filter by:</p>
           <div className="flex gap-4 flex-wrap">
             <div>
-              <p className="text-xs text-gray-600 mb-1">Status</p>
+              <p className="label-uppercase mb-1">Status</p>
               <div className="flex gap-2 flex-wrap">
-                <Badge
-                  variant={filterStatus === null ? 'default' : 'outline'}
-                  className="cursor-pointer text-xs"
-                  onClick={() => setFilterStatus(null)}
-                >
-                  All
-                </Badge>
+                <FilterBadge active={filterStatus === null} onClick={() => setFilterStatus(null)}>All</FilterBadge>
                 {STATUSES.map((s) => (
-                  <Badge
-                    key={s}
-                    variant={filterStatus === s ? 'default' : 'outline'}
-                    className="cursor-pointer text-xs capitalize"
-                    onClick={() => setFilterStatus(filterStatus === s ? null : s)}
-                  >
+                  <FilterBadge key={s} active={filterStatus === s} onClick={() => setFilterStatus(filterStatus === s ? null : s)}>
                     {STATUS_CONFIG[s].emoji} {STATUS_CONFIG[s].label}
-                  </Badge>
+                  </FilterBadge>
                 ))}
               </div>
             </div>
             {categories.length > 0 && (
               <div>
-                <p className="text-xs text-gray-600 mb-1">Category</p>
+                <p className="label-uppercase mb-1">Category</p>
                 <div className="flex gap-2 flex-wrap">
-                  <Badge
-                    variant={filterCategory === null ? 'default' : 'outline'}
-                    className="cursor-pointer text-xs"
-                    onClick={() => setFilterCategory(null)}
-                  >
-                    All
-                  </Badge>
+                  <FilterBadge active={filterCategory === null} onClick={() => setFilterCategory(null)}>All</FilterBadge>
                   {categories.map((cat) => (
-                    <Badge
-                      key={cat}
-                      variant={filterCategory === cat ? 'default' : 'outline'}
-                      className="cursor-pointer text-xs"
-                      onClick={() => setFilterCategory(filterCategory === cat ? null : cat)}
-                    >
-                      {cat}
-                    </Badge>
+                    <FilterBadge key={cat} active={filterCategory === cat} onClick={() => setFilterCategory(filterCategory === cat ? null : cat)}>{cat}</FilterBadge>
                   ))}
                 </div>
               </div>
@@ -293,7 +237,7 @@ export default function PartnershipsPage() {
         </div>
       </div>
 
-      {/* Kanban Board */}
+      {/* Kanban */}
       <div className="max-w-[1400px] mx-auto px-6 pb-12">
         <div className="flex gap-4 overflow-x-auto pb-4">
           {STATUSES.map((status) => (

@@ -55,32 +55,37 @@ const FilterBar: React.FC<FilterBarProps> = ({
   };
 
   return (
-    <div className="space-y-4 bg-gray-900/30 border border-gray-800 rounded-lg p-6 mb-6">
+    <div className="surface-card p-6 mb-6 space-y-4">
       {/* Search */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Search</label>
+        <label className="label-uppercase block mb-2">Search</label>
         <input
           type="text"
           placeholder="Search ideas by title or angle..."
           value={searchQuery}
           onChange={handleSearchChange}
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#ff4e64] transition-colors"
+          className="w-full rounded-lg px-4 py-2 text-sm focus:outline-none transition-colors"
+          style={{
+            background: 'var(--bg-elevated)',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--border-default)',
+          }}
         />
       </div>
 
       {/* Status Filter */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Status</label>
+        <label className="label-uppercase block mb-2">Status</label>
         <div className="flex flex-wrap gap-2">
           {statuses.map((status) => (
             <button
               key={status}
               onClick={() => handleStatusClick(status)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                selectedStatus === status
-                  ? 'bg-[#ff4e64] text-white'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-              }`}
+              className="px-4 py-2 rounded-full text-sm font-medium transition-colors"
+              style={{
+                background: selectedStatus === status ? 'var(--accent-primary)' : 'var(--bg-elevated)',
+                color: selectedStatus === status ? '#fff' : 'var(--text-secondary)',
+              }}
             >
               {status}
             </button>
@@ -90,7 +95,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
       {/* Tag Filter */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Tags</label>
+        <label className="label-uppercase block mb-2">Tags</label>
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <TagPill

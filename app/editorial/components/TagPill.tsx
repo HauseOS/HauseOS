@@ -10,11 +10,11 @@ const TagPill: React.FC<TagPillProps> = ({ label, onClick, selected = false }) =
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-        selected
-          ? 'bg-[#ff4e64] text-white'
-          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
-      }`}
+      className="px-3 py-1 rounded-full text-xs font-medium transition-colors"
+      style={{
+        background: selected ? 'var(--accent-primary)' : 'var(--bg-elevated)',
+        color: selected ? '#fff' : 'var(--text-secondary)',
+      }}
     >
       {label}
     </button>

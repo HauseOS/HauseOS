@@ -9,6 +9,7 @@
 
 import dotenv from 'dotenv';
 dotenv.config();
+import { createClient } from '@supabase/supabase-js';
 
 const API_BASE = process.env.HAUSEOS_API_URL || 'https://hauseos.vercel.app';
 
@@ -266,44 +267,38 @@ async function seedIdeas() {
 }
 
 async function seedResearch() {
-  console.log(`\n🔬 Seeding ${researchDrops.length} research drops...`);
-  let success = 0;
-  let failed = 0;
+  console.log(`\n🔬 Seeding ${researchDrops.length} research drops (via Supabase client)...`);
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_KEY,
+    { auth: { persistSession: false } }
+  );
 
-  for (const drop of researchDrops) {
-    try {
-      const res = await fetch(`${API_BASE}/api/editorial/research`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(drop)
-      });
+  // Map seed data fields to DB schema (title→topic, summary→summary)
+  const rows = researchDrops.map(d => ({
+    topic: d.title,
+    summary: d.summary.substring(0, 500),
+    key_findings: d.tags || null,
+    partner_fit: null,
+    urgency: d.urgency || 'low',
+    agent_origin: d.agent_origin,
+  }));
 
-      if (res.ok) {
-        const data = await res.json();
-        console.log(`  ✅ "${drop.title}" (id: ${data.id || 'ok'})`);
-        success++;
-      } else {
-        const err = await res.text();
-        console.log(`  ❌ "${drop.title}": ${res.status} — ${err}`);
-        failed++;
-      }
-    } catch (e) {
-      console.log(`  ❌ "${drop.title}": ${e.message}`);
-      failed++;
-    }
+  const { data, error } = await supabase.from('research_drops').insert(rows).select();
+  if (error) {
+    console.log(`  ❌ Research seed failed: ${error.message}`);
+  } else {
+    console.log(`  ✅ ${data.length} research drops seeded`);
   }
-
-  console.log(`\n  Research drops: ${success} seeded, ${failed} failed`);
 }
 
 async function verifyAPI() {
   console.log('\n🔍 Verifying API is live...');
   try {
-    const res = await fetch(`${API_BASE}/api/editorial/dashboard`);
+    const res = await fetch(`${API_BASE}/api/editorial/ideas`);
     if (res.ok) {
       const data = await res.json();
-      console.log('  ✅ API is live');
-      console.log('  Current state:', JSON.stringify(data, null, 2));
+      console.log(`  ✅ API is live — ${data.total ?? 0} ideas currently in DB`);
       return true;
     } else {
       console.log(`  ❌ API returned ${res.status}`);

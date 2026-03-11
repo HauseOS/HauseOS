@@ -3,10 +3,16 @@ import * as React from "react"
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+>(({ className, style, ...props }, ref) => (
   <div
     ref={ref}
-    className={`rounded-lg border border-gray-200 bg-white text-gray-950 shadow-sm ${className}`}
+    className={`rounded-xl shadow-sm ${className}`}
+    style={{
+      background: 'var(--bg-surface)',
+      border: '1px solid var(--border-default)',
+      color: 'var(--text-primary)',
+      ...style,
+    }}
     {...props}
   />
 ))
@@ -31,6 +37,7 @@ const CardTitle = React.forwardRef<
   <h2
     ref={ref}
     className={`text-2xl font-semibold leading-none tracking-tight ${className}`}
+    style={{ color: 'var(--text-primary)' }}
     {...props}
   />
 ))
@@ -42,7 +49,8 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={`text-sm text-gray-500 ${className}`}
+    className={`text-sm ${className}`}
+    style={{ color: 'var(--text-secondary)' }}
     {...props}
   />
 ))

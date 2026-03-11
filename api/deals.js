@@ -1,75 +1,62 @@
-import { getPool, checkApiKey } from './_db.js';
+import { getSupabase } from './_db.js';
 
 export default async function handler(req, res) {
+  const supabase = getSupabase();
+  if (!supabase) return res.status(500).json({ error: 'Database not available' });
+
   if (req.method === 'GET') {
     try {
       const { status, company_id } = req.query;
-      const pool = getPool();
+      let query = supabase.from('sponsor_deals').select(`
+        *,
+        sponsor_companies(name, category, fit_score),
+        sponsor_contacts(name, email),
+        video_ideas(title)
+      `).order('created_at', { ascending: false });
 
-      let whereClause = '1=1';
-      const params = [];
-      let paramIndex = 1;
+      if (status) query = query.eq('status', status);
+      if (company_id) query = query.eq('company_id', company_id);
 
-      if (status) {
-        whereClause += ` AND d.status = $${paramIndex}`;
-        params.push(status);
-        paramIndex++;
-      }
-      if (company_id) {
-        whereClause += ` AND d.company_id = $${paramIndex}`;
-        params.push(company_id);
-        paramIndex++;
-      }
+      const { data, error } = await query;
+      if (error) throw error;
 
-      const query = `
-        SELECT d.*,
-          sc.name as company_name,
-          sc.category as company_category,
-          sc.fit_score as company_fit_score,
-          scon.name as contact_name,
-          scon.email as contact_email,
-          vi.title as idea_title
-        FROM sponsor_deals d
-        LEFT JOIN sponsor_companies sc ON d.company_id = sc.id
-        LEFT JOIN sponsor_contacts scon ON d.contact_id = scon.id
-        LEFT JOIN video_ideas vi ON d.content_idea_id = vi.id
-        WHERE ${whereClause}
-        ORDER BY d.created_at DESC
-      `;
+      // Flatten joined fields to match legacy shape
+      const deals = (data || []).map(d => ({
+        ...d,
+        company_name: d.sponsor_companies?.name,
+        company_category: d.sponsor_companies?.category,
+        company_fit_score: d.sponsor_companies?.fit_score,
+        contact_name: d.sponsor_contacts?.name,
+        contact_email: d.sponsor_contacts?.email,
+        idea_title: d.video_ideas?.title,
+        sponsor_companies: undefined,
+        sponsor_contacts: undefined,
+        video_ideas: undefined,
+      }));
 
-      const result = await pool.query(query, params);
-      res.json({ deals: result.rows });
+      res.json({ deals });
     } catch (error) {
       console.error('GET /api/deals error:', error);
       res.status(500).json({ error: error.message });
     }
+
   } else if (req.method === 'POST') {
-    if (!checkApiKey(req, res)) return;
     try {
       const { company_id, contact_id, content_idea_id, status, deal_type, deal_value, notes } = req.body;
+      if (!company_id) return res.status(400).json({ error: 'company_id is required' });
 
-      if (!company_id) {
-        return res.status(400).json({ error: 'company_id is required' });
-      }
+      const { data, error } = await supabase
+        .from('sponsor_deals')
+        .insert({ company_id, contact_id: contact_id || null, content_idea_id: content_idea_id || null, status: status || 'discovered', deal_type: deal_type || null, deal_value: deal_value || null, notes: notes || null })
+        .select().single();
 
-      const pool = getPool();
-      const query = `
-        INSERT INTO sponsor_deals (
-          company_id, contact_id, content_idea_id, status, deal_type, deal_value, notes
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-        RETURNING *
-      `;
-
-      const result = await pool.query(query, [
-        company_id, contact_id || null, content_idea_id || null,
-        status || 'discovered', deal_type || null, deal_value || null, notes || null
-      ]);
-
-      res.status(201).json(result.rows[0]);
+      if (error) throw error;
+      res.status(201).json(data);
     } catch (error) {
       console.error('POST /api/deals error:', error);
       res.status(500).json({ error: error.message });
     }
+
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }

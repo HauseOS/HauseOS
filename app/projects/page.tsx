@@ -9,38 +9,21 @@ export default function ProjectsPage() {
   const backlogProjects = PROJECTS.filter((p) => p.status === 'backlog');
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       {/* Header */}
-      <div className="border-b border-gray-200 sticky top-0 z-10 bg-white">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between gap-6 mb-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">HauseOS</h1>
-              <p className="text-gray-600 mt-1">Operational hub for Hause Collective</p>
-            </div>
-          </div>
-          <nav className="flex gap-6 border-t border-gray-200 pt-4">
-            <a href="/projects" className="text-sm font-medium text-[#ff4e64] pb-2 border-b-2 border-[#ff4e64]">
-              Projects
-            </a>
-            <a href="/content-pipeline" className="text-sm font-medium text-gray-600 hover:text-gray-900 pb-2 transition-colors">
-              Content Pipeline
-            </a>
-            <a href="/editorial" className="text-sm font-medium text-gray-600 hover:text-gray-900 pb-2 transition-colors">
-              Editorial
-            </a>
-          </nav>
+      <div className="border-b sticky top-14 z-10" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-default)' }}>
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Projects</h1>
+          <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>All Hause project status</p>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-16 space-y-16">
+      <div className="max-w-7xl mx-auto px-6 py-10 space-y-12">
         {/* Active Projects */}
         <section>
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">Active Projects</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Active Projects</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {activeProjects.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
@@ -49,21 +32,16 @@ export default function ProjectsPage() {
 
         {/* Backlog */}
         {(backlogProjects.length > 0 || BACKLOG_PROJECTS.length > 0) && (
-          <section className="border-t border-gray-200 pt-16">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">Planned</h2>
-            </div>
+          <section className="pt-8" style={{ borderTop: '1px solid var(--border-default)' }}>
+            <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Planned</h2>
             <div className="space-y-3">
               {[...backlogProjects, ...BACKLOG_PROJECTS].map((project: any, idx: number) => (
-                <div
-                  key={idx}
-                  className="border border-gray-200 bg-gray-50 rounded-lg p-4 hover:border-[#ff4e64] transition-colors"
-                >
+                <div key={idx} className="surface-card-hover p-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{project.emoji}</span>
                     <div>
-                      <h3 className="font-bold text-gray-900">{project.name}</h3>
-                      <p className="text-gray-600 text-sm">{project.description || project.tagline || ''}</p>
+                      <h3 className="font-bold" style={{ color: 'var(--text-primary)' }}>{project.name}</h3>
+                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{project.description || project.tagline || ''}</p>
                     </div>
                   </div>
                 </div>

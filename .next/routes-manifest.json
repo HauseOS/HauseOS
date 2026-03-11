@@ -33,6 +33,30 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/content",
+      "regex": "^/content(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/content(?:/)?$"
+    },
+    {
+      "page": "/content/ideas",
+      "regex": "^/content/ideas(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/content/ideas(?:/)?$"
+    },
+    {
+      "page": "/content/pipeline",
+      "regex": "^/content/pipeline(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/content/pipeline(?:/)?$"
+    },
+    {
+      "page": "/content/research",
+      "regex": "^/content/research(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/content/research(?:/)?$"
+    },
+    {
       "page": "/content-pipeline",
       "regex": "^/content\\-pipeline(?:/)?$",
       "routeKeys": {},
